@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import CSSTransitionGroup from "react-addons-css-transition-group";
+import { increment } from "../actions/actionCreator";
 
 import { useDispatch } from "react-redux";
 
@@ -30,15 +31,7 @@ function Photo({ post, i, comments }) {
       <figcaption>
         <p>{post.caption}</p>
         <div className="control-buttons">
-          <button
-            onClick={() =>
-              dispatch({
-                type: "INCREMENT_LIKES",
-                index: i,
-              })
-            }
-            className="likes"
-          >
+          <button onClick={() => dispatch(increment(i))} className="likes">
             &hearts; {post.likes}
           </button>
           <Link className="button" to={`/view/${post.code}`}>

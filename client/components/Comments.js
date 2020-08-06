@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
+import { removeComment, addComment } from "../actions/actionCreator";
 
 function Comments(props) {
   const dispatch = useDispatch();
@@ -15,13 +16,7 @@ function Comments(props) {
           {comment.text}
           <button
             className="remove-comment"
-            onClick={() =>
-              dispatch({
-                type: "REMOVE_COMMENT",
-                i,
-                postId: props.params.postId,
-              })
-            }
+            onClick={() => dispatch(removeComment(props.params.postId, i))}
           >
             &times;
           </button>
@@ -34,12 +29,7 @@ function Comments(props) {
     const { postId } = props.params;
     const authorVal = author.current.value;
     const commentVal = comment.current.value;
-    dispatch({
-      type: "ADD_COMMENT",
-      postId,
-      author: authorVal,
-      comment: commentVal,
-    });
+    dispatch(addComment(postId, authorVal, commentVal));
     commentForm.current.reset();
   };
 
