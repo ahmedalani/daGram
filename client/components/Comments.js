@@ -1,15 +1,13 @@
-import React, { Component } from "react";
+import React, { useRef } from "react";
+import { useDispatch } from "react-redux";
 
-class Comments extends Component {
-  constructor(props) {
-    super(props);
-    this.renderComment = this.renderComment.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.commentForm = React.createRef();
-    this.author = React.createRef();
-    this.comment = React.createRef();
-  }
-  renderComment(comment, i) {
+function Comments(props) {
+  const dispatch = useDispatch();
+  const commentForm = useRef(null);
+  const comment = useRef(null);
+  const author = useRef(null);
+
+  const renderComment = (comment, i) => {
     return (
       <div className="comment" key={i}>
         <p>
@@ -17,8 +15,12 @@ class Comments extends Component {
           {comment.text}
           <button
             className="remove-comment"
-            onClick={(e) =>
-              this.props.removeComment(this.props.params.postId, i)
+            onClick={() =>
+              dispatch({
+                type: "REMOVE_COMMENT",
+                i,
+                postId: props.params.postId,
+              })
             }
           >
             &times;
@@ -26,31 +28,34 @@ class Comments extends Component {
         </p>
       </div>
     );
-  }
-  handleSubmit(e) {
+  };
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const { postId } = this.props.params;
-    const author = this.author.current.value;
-    const comment = this.comment.current.value;
-    this.props.addComment(postId, author, comment);
-    this.commentForm.current.reset();
-  }
-  render() {
-    return (
-      <div className="comments">
-        {this.props.postComments.map(this.renderComment)}
-        <form
-          ref={this.commentForm}
-          className="comment-form"
-          onSubmit={this.handleSubmit}
-        >
-          <input type="text" ref={this.author} placeholder="author" />
-          <input type="text" ref={this.comment} placeholder="comment" />
-          <input type="submit" hidden />
-        </form>
-      </div>
-    );
-  }
-}
+    const { postId } = props.params;
+    const authorVal = author.current.value;
+    const commentVal = comment.current.value;
+    dispatch({
+      type: "ADD_COMMENT",
+      postId,
+      author: authorVal,
+      comment: commentVal,
+    });
+    commentForm.current.reset();
+  };
 
+  return (
+    <div className="comments">
+      {props.postComments.map(renderComment)}
+      <form
+        ref={commentForm}
+        className="comment-form"
+        onSubmit={(e) => handleSubmit(e)}
+      >
+        <input type="text" ref={author} placeholder="author" />
+        <input type="text" ref={comment} placeholder="comment" />
+        <input type="submit" hidden />
+      </form>
+    </div>
+  );
+}
 export default Comments;

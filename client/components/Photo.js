@@ -2,8 +2,10 @@ import React from "react";
 import { Link } from "react-router";
 import CSSTransitionGroup from "react-addons-css-transition-group";
 
-function Photo(props) {
-  const { post, i, comments } = props;
+import { useDispatch } from "react-redux";
+
+function Photo({ post, i, comments }) {
+  const dispatch = useDispatch();
   return (
     <figure className="grid-figure">
       <div className="grid-photo-wrap">
@@ -28,7 +30,15 @@ function Photo(props) {
       <figcaption>
         <p>{post.caption}</p>
         <div className="control-buttons">
-          <button onClick={props.increment.bind(null, i)} className="likes">
+          <button
+            onClick={() =>
+              dispatch({
+                type: "INCREMENT_LIKES",
+                index: i,
+              })
+            }
+            className="likes"
+          >
             &hearts; {post.likes}
           </button>
           <Link className="button" to={`/view/${post.code}`}>
