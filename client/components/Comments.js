@@ -17,11 +17,9 @@ class Comments extends Component {
           {comment.text}
           <button
             className="remove-comment"
-            onClick={this.props.removeComment.bind(
-              null,
-              this.props.params.postId,
-              i
-            )}
+            onClick={(e) =>
+              this.props.removeComment(this.props.params.postId, i)
+            }
           >
             &times;
           </button>
